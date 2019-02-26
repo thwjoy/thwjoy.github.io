@@ -97,6 +97,7 @@ scholar:
   order: descending
 
   source: /_bibliography/
+  repository: /_bibliography/
   bibliography: papers.bib
   bibliography_template: bib
 
