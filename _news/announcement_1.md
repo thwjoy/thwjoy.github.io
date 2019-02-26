@@ -1,7 +1,7 @@
 ---
 layout: post
-date: 2019-02-03 15:59:00-0400
+date: 2019-01-30 15:59:00-0400
 inline: true
 ---
 
-Migrating my personal website to Github pages.
+Delighted to have my Masters dissertation accepted into the SIAM Journal on Imaging Sciences (SIIMS).
