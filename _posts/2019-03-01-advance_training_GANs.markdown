@@ -36,9 +36,27 @@ For a 1D case, this results in the gradient of the function $$f(x)$$, having a m
 This is a desirable property for the discriminator, where we would like to place a constraint on the maximum value for the gradient.
 [Arjovsky et al.](link) successfully applied this idea to GANs resulting in the Wassertein GAN (WGAN), where they replaced the discriminator with a critic, which returned a score instead of returning a probability that the sample was from either $$q_{data}(x)$$ or $$p_g(x)$$.
 To ensure that the critic was bounded by a 1-Lipschitz function, the weights are simply clipped to lie within a certain range.
-Whilst clipping the weights is a naive way of ensuring Lipschitz continuity, it motivated the need to constrain the discriminator to be Lipshitz continuous.
+Whilst clipping the weights is a naive way of ensuring Lipschitz continuity, it motivated the benefit of constraining the discriminator to be Lipshitz continuous.
 
 
+#### Gradient Penalties
+
+Whilst WGAN showed us Lipshitz continous functions lead to imporve stability in training, the use of weight clipping can lead to undersibale behaviour.
+This issue was addressed by the addition of a [Gradient Penalty](link), where there is the addition of a parabolic regulariser on the gradient of the discriminator.
+
+$$
+Add GP loss function
+$$
+
+
+##### Weight normalisation
+
+
+
+
+
+
+#### wrap up with some thoughts
 
 
 
