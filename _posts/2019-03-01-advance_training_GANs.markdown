@@ -5,6 +5,8 @@ date: 2019-03-01 11:12:00-0400
 description: A brief overview of regularising GANs.
 ---
 
+**Work in progress**
+
 It's a well known fact that [GANs](https://arxiv.org/pdf/1406.2661.pdf) are notoriously hard to train. 
 This is no surprise given the objectives of learning an approximate high-dimensional probability distribution $$p_g(x)$$, of some underlying data distribution $$q_{data}(x)$$.
 This is further compounded by the fact that the training regime amounts to finding the Nash equilibrium of continuous, non-convex, high-dimensional games.
@@ -95,10 +97,9 @@ This is advantageous as it enables a tighter upper bound on the Lipschitz consta
 
 
 
+#### Closing remarks
 
-#### wrap up with some thoughts
 Unfortunately, relying on regularisers for conditioning a neural network places a heavy dependance on the strength of the regularisation parameter, often leaving researchers with no other choice than to do extensive cross-validation, which is undesirable.
-
 
 
 Clearly, optimising the generator relies firstly, on the descriminator being able to successfully distinguish between a real and fake sample, but also, and perhaps more importantly on obtaining meaningful gradients. 

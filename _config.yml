@@ -31,7 +31,7 @@ google_analytics: UA-XXXXXXXXX # out your google-analytics code
 # Blog
 # -----------------------------------------------------------------------------
 blog_name: blog
-blog_description: a simple whitespace theme for academics
+blog_description: Just throwing some thoughts out there...
 
 # Pagination
 paginate: 4
