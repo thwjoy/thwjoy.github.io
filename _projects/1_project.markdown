@@ -1,55 +1,59 @@
 ---
 layout: page
-title: Project 1
-description: a project with a background image
-img: /assets/img/12.jpg
+title: Inference Tutorials
+description: Information on performing MLE and MAP
+img: /assets/img/inference.png
 ---
 
-Every project has a beautiful feature shocase page. It's easy to include images, in a flexible 3-column grid format. Make your photos 1/3, 2/3, or full width.
+Breif tutorial on MLE and MAP inference. Firstly download the following the script from 
+<a href="url">Github</a>, and try and run it. You'll need to ensure you have Python, Numpy, Scipy and Matplotlib installed.
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+If everything runs successfully, you'll see a dyanimc graph appear containing three sub figures.
+The top figure contains three items: The data we want to fit a model to (blue x); the model we want to fit (blue Gaussian); and the prior of the mean for the model (red Gaussian).
+The second figure plots a trace of the likelihood of the data as we vary the mean of our model, the likelihood is simply the probability of the data given the parameters.
+The third indicates the trace of the posterior, note this is not the true posterior it is only proportional to the likelihood multuplied by the prior.
 
-    ---
-    layout: page
-    title: Project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
-
-
-<div class="img_row">
-    <img class="col one left" src="{{ site.baseurl }}/assets/img/1.jpg" alt="" title="example image"/>
-    <img class="col one left" src="{{ site.baseurl }}/assets/img/2.jpg" alt="" title="example image"/>
-    <img class="col one left" src="{{ site.baseurl }}/assets/img/3.jpg" alt="" title="example image"/>
+<div class="img_row" style='height: 100%; width: 100%; object-fit: contain'>
+    <img class="col three left" src="{{ site.baseurl }}/assets/img/inference.png" alt="" title="Main Figure" />
 </div>
 <div class="col three caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="img_row">
-    <img class="col three left" src="{{ site.baseurl }}/assets/img/5.jpg" alt="" title="example image"/>
-</div>
-<div class="col three caption">
-    This image can also have a caption. It's like magic.
+    You should be greated with this display, where the blue curve moves from left to right.
 </div>
 
-You can also put regular text between your rows of images. Say you wanted to write a little bit about your project before you posted the rest of the images. You describe how you toiled, sweated, *bled* for your project, and then.... you reveal it's glory in the next row of images.
+Hopefully you can see that as we move the model from left to right, the likelihood of the data given that model increases as we approach regions where there are dense points. Clearly, the model fits best when the likelihood is highest, hence why we try and find the parameters which maximise the likelihood.
+Similarly for the approximate posterior, which is just the likelihood weighted by the prior.
+
+The above example gives a resonably informative prior, however we are not always certain of our prior beliefs on parameters.
+Below is an example where we have a very uninformative prior, as you can see when the prior is almost uniform the posterior is proportional to the likelihood.
 
 
-<div class="img_row">
-    <img class="col two left" src="{{ site.baseurl }}/assets/img/6.jpg" alt="" title="example image"/>
-    <img class="col one left" src="{{ site.baseurl }}/assets/img/11.jpg" alt="" title="example image"/>
+<div class="img_row" style='height: 100%; width: 100%; object-fit: contain'>
+    <img class="col three left" src="{{ site.baseurl }}/assets/img/uninformative_prior.png" alt="" title="Uninformative prior" />
 </div>
 <div class="col three caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
+    Example where prior is not very informative.
 </div>
 
 
-<br/><br/>
+#### So why do MLE and MAP give poor estimates of parameters?
 
+MLE and MAP give point estimates of parameters, i.e. we have no idea how the likelihood behaves either side of the maximum.
+Hopefully you can see this in following example, where the likelihood has multiple peaks  which lead to almost similar likelihoods.
 
-The code is simple. Just add a col class to your image, and another class specifying the width: one, two, or three columns wide. Here's the code for the last row of images above:
-
-<div class="img_row">
-    <img class="col two left" src="/img/6.jpg"/>
-    <img class="col one left" src="/img/11.jpg"/>
+<div class="img_row" style='height: 100%; width: 100%; object-fit: contain'>
+    <img class="col three left" src="{{ site.baseurl }}/assets/img/bad_distribution.png" alt="" title="Uninformative prior" />
 </div>
+<div class="col three caption">
+    Example of infomative information about the likelihood.
+</div>
+
+Whilst we still get the value that maximise the likelihood, inspecting how the likelihood behaves can provide valuable information.
+In this example cleary the standard deviation of the model is far too small, resulting in this spikey behaviour.
+
+#### A few things for you to try
+
+* Firstly play with the parameters of the underlying distribution and then the priors.
+
+* Then try different distributions, what would you do without assuming a Gaussian model?
+
+* You could also try and perform exact posterior inference (you need to compute the partition function $$p(x)$$) or MLE and MAP for the standard deviation.
