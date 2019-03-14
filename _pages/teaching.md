@@ -2,9 +2,19 @@
 layout: page
 permalink: /teaching/
 title: teaching
-description: Materials for courses you taught. Replace this text with your description.
+description: Materials for B14 tutorials.
 ---
 
-For now, this page is assumed to be a static description of your courses. You can convert it to a collection similar to `_projects/` so that you can have a dedicated page for each course.
+### Inference and Estimation
 
-Organize your courses by years, topics, or universities, however you like!
+ * A brief tutorial can be found [here](/projects/inference/)
+ * This is also a fantastic [book](https://doc.lagout.org/science/Artificial Intelligence/Machine learning/Machine Learning_ A Probabilistic Perspective [Murphy 2012-08-24].pdf), although it might be a little too hard to digest.
+
+ 
+### Image Processing
+
+- To come
+
+### Signal Processing
+
+- To come
