@@ -23,7 +23,14 @@ Clearly, when the distributions are far apart there will be minimal gradients, h
 Unfrortunatley, this can lead to poor initial training and also to exploding gradients given large diffences between $$q_{data}(x)$$ and $$p_g(x)$$, which should be avoided at all costs.
 To avoid the latter, the research community has become motivated to apply some regularity condition in an attempt to bound the output of the disriminator.
 
+
+
+
 #### Control of Lipshitz
+
+
+
+
 
 Controlling the Lipshitz constant has proven to be one of the more successful methods for regularising the discriminator.
 In this setting, the goal is to obtain a discriminator from a set of $$K$$-Lipshitz continuous functions such that:
@@ -32,11 +39,18 @@ $$
 \hspace9ex ||f(x) - f(x')|| \leq K||x - x'|| \thickspace \forall \thickspace x, \space x'.
 $$
 
+
+
+
+
 For a 1D case, this results in the gradient of the function $$f(x)$$, having a maximum value less than $$K$$.
 This is a desirable property for the discriminator, where we would like to place a constraint on the maximum value for the gradient.
 [Arjovsky et al.](link) successfully applied this idea to GANs resulting in the Wassertein GAN (WGAN), where they replaced the discriminator with a critic, which returned a score instead of returning a probability that the sample was from either $$q_{data}(x)$$ or $$p_g(x)$$.
 To ensure that the critic was bounded by a 1-Lipschitz function, the weights are simply clipped to lie within a certain range.
 Whilst clipping the weights is a naive way of ensuring Lipschitz continuity, it motivated the benefit of constraining the discriminator to be Lipshitz continuous.
+
+
+
 
 
 #### Gradient Penalties
@@ -45,18 +59,45 @@ Whilst WGAN showed us Lipshitz continous functions lead to imporve stability in 
 This issue was addressed by the addition of a [Gradient Penalty](link), where there is the addition of a parabolic regulariser on the gradient of the discriminator.
 
 $$
-Add GP loss function
+\mathcal{R} = E_{x ~ p(x)}[(||\nabla_x D(x)||_2 - 1)^2]
 $$
 
 
-##### Weight normalisation
 
 
+#### Weight normalisation
+
+
+Whilst, GP perfomed well, simply encouraging the norm of the gradient to be close to 1 only enables us to encourage a 1-Lipshitz discriminator for regions where we have data samples.
+An import caveat of this is that it fails to achieve a well generalized 1-Lipschitz function, In other words, we cannot attain stability outside of the support of $$q_{data}(x)$$ and $$p_g(x)$$.
+Normalising the weights in the discriminator network is one way to solve this, showing promising results.
+Whilst weight normalisation has been around for some time, the first attempt to explicitly normalise the weights of the discriminator were undertaken by [Brock et al.](link).
+Similaryl to GP, they added a regulariser which encouraged the weights of each filter to be orthonormal to one another:
+
+
+
+$$
+\mathcal{R} = ||W^TW - \bold{1}||
+$$
+
+
+
+This is a desirable property in the discriminator as the norm of the weights will remain, hence ensuring a Lipschitz constant of 1.
+Secondly, the orthogonal nature of the filters has been shown to help training in neural networks [Saxe et al.](link).
+TODO Talk more about orthogonality, why is it useful?
+
+
+
+
+The success of orthornormal regularisation drew significant attention, which naturally led to a critial investigation into whether more effective methods exist.
+Spectral Normalisation was a result of such a research drive, where instead of constraining the weights to have a norm of 1, they normalised the weights by their largest singular value.
+This is advantageous as it enables a tighter upper bound on the Lipschitz constant, which leads to more informative gradients in the training.
 
 
 
 
 #### wrap up with some thoughts
+Unfortunately, relying on regularisers for conditioning a neural network places a heavy dependance on the strength of the regularisation parameter, often leaving researchers with no other choice than to do extensive cross-validation, which is undesirable.
 
 
 
