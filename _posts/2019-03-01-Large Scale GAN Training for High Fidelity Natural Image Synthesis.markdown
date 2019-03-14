@@ -19,7 +19,7 @@ The baseline architecture used in their work was SA-GAN by [Zhang et al.](https:
 Thus generating images which contain consisting features across all parts of the image and a high level structural representation.
 This achieved using a self-attention mechanism, where spatial regions from across the image are added to local regions, resulting in information which contains high level context, but also local detail for each feature point.
 [Brock et al.](https://arxiv.org/pdf/1809.11096.pdf) introduced class-conditional BatchNorm to the generator and projection to the discriminator, which projects the output of a discriminator onto the embedding of the given class.
-They also make used of Orthogonal Initialisation [Saxe et al.](link), which is known to have important properties in GANs [Link](link).
+They also make used of Orthogonal Initialisation [Saxe et al.](https://arxiv.org/pdf/1312.6120.pdf), which is known to be an important property in neural networks.
 Perhaps more importantly to the success was the hardware used for training, in some models they made use of 512 cores of a Google TPUv3 Pod, and enabled BatchNorm across all devices, which intuitively should improve generalisation and stability in the training. 
 
 
@@ -59,7 +59,7 @@ $$
 \mathcal{R} = ||W^TW \odot (1 - I)||^2_F
 $$
 
-This has the primary advantage of encouraging orthogonality in the filters, but unlike previous [works](link), does not constrain the norm to be 1, which is at odds to previous research directions which aim to encourage the norms of the weights to be 1.
+This has the primary advantage of encouraging orthogonality in the filters, but unlike previous [works](/blog/2019/advance_training_GANs/), does not constrain the norm to be 1, which is at odds to previous research directions which aim to encourage the norms of the weights to be 1.
 It is also interesting that 60% of the models are amenable to truncation with Orthogonal Regularisation, suggesting that this regularisation is not completely effective for the truncation trick.
 
 ### Analysis
@@ -73,7 +73,8 @@ They report that the most informative metrics for pre-empting training collapse 
 $$
 W = W - \text{max}(0, \sigma_0 - \sigma_{clamp})v_0u_0^T,
 $$
-Where $$v_0$$ and $$u_0$$ are the left and right singular vectors respectively and $$\sigma_{clamp}$$ is set emperically. They observed that whilst constraining the singular values helped training, it wasn't sufficient to mitigate training collapse.
+
+Where $$v_0$$ and $$u_0$$ are the left and right singular vectors respectively and $$\sigma_{clamp}$$ is set empirically. They observed that whilst constraining the singular values helped training, it wasn't sufficient to mitigate training collapse.
 One point that eludes me is that when Spectral Normalisation was employed in the generator, the authors still claim that the above technique helped constrain the singular values, suggesting that the Spectral Normalisation in this setting was ineffective. 
 
 #### Stability in the Discriminator
@@ -85,8 +86,12 @@ $$
 \mathcal{R} = E_{x ~ p(x)}[(||\nabla_x D(x)||_F^2],
 $$ 
 
-which stabilised training but severely degrades performance. 
+which stabilised training but severely degrades performance, it is not initially clear to me why you would want to constrain the norm of the gradient to be 0, maybe to discourage sharp updates of parameters.
+Similar regularisation stratergies were also employed, but lead to similar conclusions that with a large enough constraint on the weights, stability can be achieved, but at a significant loss in performance.
+Another interesting result is that the later layers of the discriminator contain larger singular values than the early layers.
+This is in contrast to the generator, which indicates that the larger singular values 
 
+#### Memorisation of the Discriminator
 
-A further investigation would be to investigate if this noise is still present when training the discriminator with only real samples.
-Another interesting result is that the later layers of the discriminator contain larger singular values, than the early layers.
+The authors also investigated memorisation in the discriminator and found that instead of learning a distribution, it just learnt to overfit to the training data.
+Whilst this does provide enough of a training signal to learn $$p_g(x)$$, one would argue that generalizability is an import aspect of deep learning and in this setting the discriminator fails miserably.
