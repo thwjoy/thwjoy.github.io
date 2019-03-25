@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Gradient descent GAN optimization is locally stable
-date: 2019-03-18 11:12:00-0400
+date: 2020-03-18 11:12:00-0400
 description: Review of the paper Gradient descent GAN optimization is locally stable - NIPS 2017.
 ---
 
@@ -48,6 +48,7 @@ To get over this, they introduced a relaxed (non-realisable) assumption, which s
 
 Assumption I (non-realisable): $$D(x) = 0, \forall x \in supp(q_{data}) \cup supp(p_{g})$$
 
+Whilst this assumption is little more than a relaxed version of the previous assumption, the formation of the union of the distributions enforces the condition that the discriminator is linear in its parameters.
 
 
 
