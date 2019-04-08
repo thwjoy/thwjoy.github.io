@@ -18,12 +18,12 @@ last_updated: # leave blank if you don't want to display last updated
 # Social integration
 # -----------------------------------------------------------------------------
 github_username: thwjoy
-twitter_username: xhosers
-linkedin_username: # your LinkedIn user name
-scholar_userid: # your Google Scholar ID
-orcid_id: # your ORCID ID
+twitter_username: 
+linkedin_username: tom-joy
+scholar_userid: thwjoy
+orcid_id: 0000-0003-2707-6526
 contact_note: >
-  You can even add a little note about which of these is the best way to reach you.
+  It's best to contact me directly via email.
 
 google_analytics: UA-XXXXXXXXX # out your google-analytics code
 
