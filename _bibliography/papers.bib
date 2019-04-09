@@ -3,7 +3,7 @@
 
 @article{doi:10.1137/18M1178104,
     abstract = {Dense conditional random fields (CRFs) have become a popular framework for modeling several problems in computer vision such as stereo correspondence and multiclass semantic segmentation. By modeling long-range interactions, dense CRFs provide a labeling that captures finer detail than their sparse counterparts. Currently, the state-of-the-art algorithm performs mean-field inference using a filter-based method but fails to provide a strong theoretical guarantee on the quality of the solution. A question naturally arises as to whether it is possible to obtain a maximum a posteriori (MAP) estimate of a dense CRF using a principled method. Within this paper, we show that this is indeed possible. Specifically, we will show that, by using a filter-based method, continuous relaxations of the MAP problem can be optimized efficiently using state-of-the-art algorithms. Specifically, we will solve a quadratic programming relaxation using the Frank--Wolfe algorithm and a linear programming relaxation by developing a proximal minimization framework. By exploiting labeling consistency in the higher-order potentials and utilizing the filter-based method, we are able to formulate the above algorithms such that each iteration has a complexity linear in the number of classes and random variables. The presented algorithms can be applied to any labeling problem using a dense CRF with sparse higher-order potentials. In this paper, we use semantic segmentation as an example application as it demonstrates the ability of the algorithm to scale to dense CRFs with large dimensions. We perform experiments on the Pascal dataset to indicate that the presented algorithms are able to attain lower energies than the mean-field inference method.},
-	author = {Joy, T and Desmaison, A and Ajanthan, T and Bunel, R and Salzmann, M and Kohli, P and Torr, P and Kumar, M},
+	author = {Joy, T and Desmaison, A and Ajanthan, T and Bunel, R and Salzmann, M and Kohli, P and Torr, P.H.S and Kumar, M},
 	doi = {10.1137/18M1178104},
 	journal = {SIAM J. Imaging Sci.},
 	number = {1},
@@ -29,4 +29,17 @@
   year={2018},
   pdf = {patent_GB2559978.pdf},
   journal={Intellectual Property Office},
+}
+
+@ARTICLE{2019arXiv190402957T,
+  abstract={Real world applications of stereo depth estimation require models that are robust to dynamic variations in the environment. Even though deep learning based stereo methods are successful, they often fail to generalize to unseen variations in the environment, making them less suitable for practical applications such as autonomous driving. In this work, we introduce a "learning-to-adapt" framework that enables deep stereo methods to continuously adapt to new target domains in an unsupervised manner. Specifically, our approach incorporates the adaptation procedure into the learning objective to obtain a base set of parameters that are better suited for unsupervised online adaptation. To further improve the quality of the adaptation, we learn a confidence measure that effectively masks the errors introduced during the unsupervised adaptation. We evaluate our method on synthetic and real-world stereo datasets and our experiments evidence that learning-to-adapt is, indeed beneficial for online adaptation on vastly different domains.},
+       author = {{Tonioni}, A and {Rahnama}, O and {Joy}, T and
+         {Di Stefano}, L and {Ajanthan}, T and
+         {Torr}, P.H.S},
+        title = "{Learning to Adapt for Stereo}",
+      journal = {arXiv:1904.02957},
+         year = "2019",
+         pdf = {learning_to_adapt.pdf},
+         code = {https://github.com/CVLAB-Unibo/Learning2AdaptForStereo}
+        
 }
