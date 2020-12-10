@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Tom Joy | Normalising Flows and Invertible Neural Networks</title>
+  <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+">
+
+  <link rel="shortcut icon" href="/assets/img/favicon.ico">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="canonical" href="/blog/2019/Normalising-Flows/">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    
+    <span class="site-title">
+        
+        <strong>Tom</strong> Joy
+    </span>
+    
+
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+      <div class="trigger">
+        <!-- About -->
+        <a class="page-link" href="/">about</a>
+
+        <!-- Blog -->
+        <a class="page-link" href="/blog/">blog</a>
+
+        <!-- Pages -->
+        
+          
+        
+          
+        
+          
+        
+          
+            <a class="page-link" href="/projects/">projects</a>
+          
+        
+          
+            <a class="page-link" href="/publications/">publications</a>
+          
+        
+          
+            <a class="page-link" href="/teaching/">teaching</a>
+          
+        
+          
+        
+
+        <!-- CV link -->
+        <!-- <a class="page-link" href="/assets/pdf/CV.pdf">vitae</a> -->
+
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script
+  type="text/javascript"
+  charset="utf-8"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+>
+</script>
+<script
+  type="text/javascript"
+  charset="utf-8"
+  src="https://vincenttam.github.io/javascripts/MathJaxLocal.js"
+>
+</script>
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Normalising Flows and Invertible Neural Networks</h1>
+    <p class="post-meta">March 1, 2019</p>
+  </header>
+
+  <article class="post-content">
+    <p>\begin{align}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\z}{\mathbf{z}}
+\newcommand{\R}{\mathbb{R}}
+\end{align}</p>
+
+<p>Here we are looking at two types of generative models: Normalising Flows (NF) and Invertible Neural Networks (INN). Many blog posts outlining normalising flows already exist, e.g, <a href="https://lilianweng.github.io/lil-log/2018/10/13/flow-based-deep-generative-models.html?fbclid=IwAR0B5rOmW88VwfJAMYowU-v9xC1XJN3fXO5WKPya9K3RfhehP4O4l6jXZjc">here</a> or <a href="http://akosiorek.github.io/ml/2018/04/03/norm_flows.html">here</a>, but I thought I’d provide yet another one, mainly to help me consolidate what I’ve learnt, but also to hopefully shed light on some concepts which can be hard to grasp.</p>
+
+<p>So why do we need NFs and INNs? Other flavours of generative models such as VAEs or GANs currently exist, and work pretty well, so why do we need another type of generative model? If we think about what we actually need from a generative model it becomes a little clearer why NFs and INNs are needed. A generative model should (ideally) be able to: offer the ability to generate real looking data-points (samples); produce a model of the true distribution (density estimation); give a score or probability that a sample is from the true distribution (likelihood evaluation). GANs address sampling very well, but they fall short when it comes to likelihood evaluation and density estimation (bar a few examples). This is understandable as GANs are trained adversarially to just produce realistic samples and not do anything else. VAEs on the other can also sample well, but focus on modelling a latent representation of the true distribution. Consequently, there is a gap in the generative for a market which is able to: sample, obtain a density estimate and also perform likelihood estimation.</p>
+
+<p>Formally, what we really want to do, is to obtain a good estimate of a high-dimensional distribution $p(\x) \x \in \mathcal{X}$. Normalising flows address this issue by starting with a simple parameterised distribution $p(\z)$ and successively applying transformations $f_i(\z_i)$ until a good approximation of $p(\x)$ is obtained. Using the change of variables formula $p(y)=p(x)\vert\frac{\partial x}{\partial y}\vert$, we can obtain an expression for the approximate distribution $\tilde{p}(\x)$.</p>
+
+<p>\begin{align}
+\log{\tilde{p}(\x)} = \log{p_0(\z_0)} + \sum_{i=0}^{N}\log{\Bigg\vert\det{\frac{\partial f^{-1}_i(\z_{i+1})}{\partial \z_i}}\Bigg\vert}.
+\end{align}</p>
+
+<p>Assuming $f_i$ is invertible, we can chain as many functions together as we like, thus creating a \textit{flow} from the complex $\tilde{p}(\x)$ to the simple $p_0(\z_0)$. This allows us to then obtain a parameterised representation of $p(\x)$ via a transformation of variables, consequently we can now perform: sampling, density estimation and likelihood evaluation.</p>
+
+<h3 id="learning">Learning</h3>
+
+<p>Let’s assume that we have access to a dataset $\mathcal{D} = \lbrace\x \sim p(\x)\rbrace^M$, and we want to fit a model $\tilde{p}(\cdot)$ to it which is parameterised by $\theta$. All we do is simply maximise the likelihood of the elements of $\mathcal{D}$. This can also be seen as minimising the negative log-likelihood:</p>
+
+<p>\begin{align}
+\min_\theta - \frac{1}{M}\sum_{\x \in \mathcal{D}}\log{\tilde{p}(\x)}.
+\end{align}</p>
+
+<p>However, we need a representation for $\tilde{p}(\x)$, we can use normalising flows, but for the minute let’s assume that we are simply trying to fit a high dimensional Gaussian to the elements of $\mathcal{D}$. All we would need to do is maximise the likelihood of $\mathcal{D}$ over the mean and standard deviation.
+This would then give us a parametrised representation of , allowing us to not only sample, but also perform density estimation and likelihood evaluation. However,it is very unlikely that $p(x)$ will be normally distributed resulting in a very bad approximation and a useless model.</p>
+
+<p>Clearly normalising flows is very applicable here, by successively applying transformations we can obtain a good approximation of $p(\x)$. Using the change of variables formula and assuming we have a latent distribution $q(\z) \z \in \mathcal{Z}$ and that the composition of $f_i \forall i \in \lbrace i,…,N\rbrace$ is represented as $F_\theta : \mathcal{Z} \rightarrow \mathcal{X}$ the fobjective can be written as:</p>
+
+<p>\begin{align}\label{eq:cov}
+\min_\theta - \frac{1}{M}\sum_{\x \in \mathcal{D}}\Bigg[\log{q(\z)} + \log{\Bigg\vert\det{\frac{d F^{-1}_\theta(\z)}{d\x}}\Bigg\vert}\Bigg].
+\end{align}</p>
+
+<p>So to learn a good representation of $p(\x)$, the only requirement is that we can evaluate the likelihood of $q(\z)$ and evaluate the log determinant of the Jacobian of $F^{-1}_\theta(\z)$ wrt $\x$ efficiently.</p>
+
+<h3 id="evaluating-the-log-determinant">Evaluating the log determinant</h3>
+
+<p>Unfortunately, evaluating the log determinant has a complexity of $\mathcal{O(d^3)}$, which is a often intractable. To address this, many methods focuss on efficient computation of the log determinant, often at the cost of expressibility or significant compute. Below we discuss the main types of normalising flow and their corresponding advantages and disadvantages.</p>
+
+<h3 id="dimensions-splitting-flows">Dimensions Splitting Flows</h3>
+
+<p>Dimensions splitting flows aim to exploit the fact that the Jacobian of a lower triangular matrix is just the product of it’s diagonal. Enforcing the Jacobian to be lower triangular of a flow leads to the condition that an output dimension $i$ is only dependant on the input dimensions up to that dimension $1:i$.</p>
+
+<h4 id="real-non-volume-preserving-flows-real-nvp">Real-Non Volume Preserving Flows (Real-NVP)</h4>
+
+<p><a href="https://arxiv.org/pdf/1605.08803.pdf">Real-NVP</a> is the simplest and most intuitive autoregressive flow to understand. They implement a flow layer at index $i$ by splitting the dimensions at $k$ like so:</p>
+
+<p>\begin{align}
+\z_{i+1}^{1:k} &amp;= \z_{i}^{1:k}\\ \z_{i+1}^{k:d} &amp;= \z_{i}^{k:d} \odot \exp{(\sigma{(\z_{i}^{1:k})} + \mu{(\z_{i}^{1:k})})}\label{eq:couple}.
+\end{align}</p>
+
+<p>Where $\sigma : \R^{1:k} \rightarrow \R^{k:d}$ and $\mu : \R^{1:k} \rightarrow \R^{k:d}$ are mappings, and $\odot$ is the Hadamard product. The log determinant of the Jacobian can be expressed as:</p>
+
+<p>\begin{align}
+\frac{\partial{\z_{i+1}}}{\partial{\z_{i}}} = \begin{bmatrix} I &amp; 0 \\ \frac{\partial{\z_{i+1}^{k:d}}}{\partial{\z_{i}^{1:k}}} &amp; \text{diag}[{\exp{\sigma{(\z_{i}^{1:k})}}}] \ \end{bmatrix},
+\end{align}</p>
+
+<p>with it’s determinant just being the product of it’s diagonal elements. Inverting Real-NVP is easily done by performing elementwise division at the same complexity as the forward pass.</p>
+
+<p>The main issue with Real-NVP is it’s limited expressibility, as we can only introduce dependencies between certain pre-defined dimensions.</p>
+
+<h4 id="glow">GLOW</h4>
+
+<p><a href="https://arxiv.org/pdf/1807.03039.pdf">GLOW</a>, extended Real-NVP by first applying Actnorm - a variant of BatchNorm - and then applying an invertible 1$\times$1 convolution before finally applying an affine coupling layer similar to Real-NVP.</p>
+
+<p align="center">
+<img src="https://thwjoy.github.io/assets/img/glow.png" />
+</p>
+
+<p>Actnorm works in a similar way to Batchnorm, but is compatible when using a batch size of 1. It applies a shift and scale parameter per channel which are initialised to 0 and 1 during an initial forward pass of the network.</p>
+
+<p>To address the ordering issue of Real-NVP, an invertible 1$\times$1 convolution is introduced. This facilitates swapping of channels throughout the network, ensuring that all channels undergo a coupling transformation. By firstly representing the parameters of 1$\times$1 convolution as $W \in \R^{c \times c}$ where $c$ is the number of channels, we can reparametrise it as it’s LU decomposition:</p>
+
+<p>\begin{align}
+W = PL(U + \text{diag}(s))
+\end{align}</p>
+
+<p>where $s = {\exp{\sigma{(\z_{i}^{1:k})}}}$ from equation \ref{eq:couple}. Clearly, by keeping the representation as an LU decomposition, we are able to quickly compute the log determinant by summing the log of each $s$.</p>
+
+<p>Finally GLOW performs an affine coupling layer similar to Real-NVP.</p>
+
+<h3 id="autoregressive-flows">Autoregressive Flows</h3>
+
+<p>Autoregressive flows aim to introduce the same feature of a lower triangular jacobian which is present in dimension splitting flows. However, rather than splitting the dimensions and introducing coupling, autoregressive flows enforce each dimension to be conditional on it’s previous dimensions and not it’s future ones. With this autoregressive assumption, the density of a datapoint is given as:</p>
+
+<p>\begin{align}
+p(\x) = \prod^{D}_{i=1}p(x_i|\x_{&lt;i})
+\end{align}</p>
+
+<p>If we consider a single conditional to be parameterised by a Gaussian, where the parameters are computing using two functions $f_{\mu_i}$ and $f_{\sigma_i}$:</p>
+
+<p>\begin{align}
+p(x_i|\x_{&lt;i}) &amp;= \mathcal{N}(x_i | \mu_i, \sigma_i), \\ \mu_i &amp;= f_{\mu_i}(\x_{&lt;i}), \\ \sigma_i &amp;= \exp({f_{\sigma_i}(\x_{&lt;i})})^2.
+\end{align}</p>
+
+<p>Where a sampling can achieved by recursively computing the following:</p>
+
+<p>\begin{align}\label{eq:sample}
+x_i &amp;= z_i\exp(\sigma_i) + \mu_i,
+\end{align}
+were $z_i \sim \mathcal{N}(0, 1)$, and it’s inverse is given by:
+\begin{align}\label{eq:auto}
+z_i &amp;= (x_i - \mu_i)\exp(-\sigma_i).
+\end{align}
+Hence, by taking the determinant of the Jacobian of \ref{eq:auto} to be $\prod_{i=1}^{D}\exp(-\sigma_i)$, we are able to construct a normalising flow:
+\begin{align}\label{eq:flow_auto}
+\log{p(\x)} = \log{\mathcal{N}(\z_0)} - \sum_{i=1}^{D}\sigma_i.
+\end{align}
+Where we can either sample from $p(\x)$ using equation \ref{eq:sample}, or compute the density of a sample $\x$ using equation \ref{eq:flow_auto}. However, naively doing so would be very slow, as for each method we have to recursively compute $\mu_i$ and $\sigma_i \forall i \in \{1,…,D\}$.</p>
+
+<h4 id="masked-autoencoder-for-distribution-estimation">Masked Autoencoder for Distribution Estimation</h4>
+
+<p><a href="https://arxiv.org/abs/1502.03509">MADE</a> enforces the autoregressive assumption in an autoencoder,</p>
+
+<h4 id="masked-autoregressive-flow">Masked Autoregressive Flow</h4>
+
+<h4 id="inverse-autoregressive-flow">Inverse Autoregressive Flow</h4>
+
+
+  </article>
+
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <footer>
+
+  <div class="wrapper">
+    &copy; Copyright 2020 Tom Joy.
+    Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
+
+    
+  </div>
+
+</footer>
+
+
+    <!-- Load jQuery -->
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<!-- Load Common JS -->
+<script src="/assets/js/common.js"></script>
+
+
+<!--
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+<script src="/assets/js/katex.js"></script>
+-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script
+  type="text/javascript"
+  charset="utf-8"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+>
+</script>
+<script
+  type="text/javascript"
+  charset="utf-8"
+  src="https://vincenttam.github.io/javascripts/MathJaxLocal.js"
+>
+</script>
+
+
+
+
+
+<!-- Include custom icon fonts -->
+<link rel="stylesheet" href="/assets/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/assets/css/academicons.min.css">
+
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-XXXXXXXXX', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+
+</html>
