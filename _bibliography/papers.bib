@@ -37,7 +37,7 @@
          {Di Stefano}, L and {Ajanthan}, T and
          {Torr}, P.H.S},
         title = "{Learning to Adapt for Stereo}",
-      journal = {arXiv:1904.02957},
+      journal = {CVPR},
          year = "2019",
          pdf = {learning_to_adapt.pdf},
          code = {https://github.com/CVLAB-Unibo/Learning2AdaptForStereo}
@@ -53,3 +53,25 @@
   pdf={fpga-cpu.pdf},
   publisher={IEEE}
 }
+
+@ARTICLE{2019arXiv190402957T,
+  abstract={Real world applications of stereo depth estimation require models that are robust to dynamic variations in the environment. Even though deep learning based stereo methods are successful, they often fail to generalize to unseen variations in the environment, making them less suitable for practical applications such as autonomous driving. In this work, we introduce a "learning-to-adapt" framework that enables deep stereo methods to continuously adapt to new target domains in an unsupervised manner. Specifically, our approach incorporates the adaptation procedure into the learning objective to obtain a base set of parameters that are better suited for unsupervised online adaptation. To further improve the quality of the adaptation, we learn a confidence measure that effectively masks the errors introduced during the unsupervised adaptation. We evaluate our method on synthetic and real-world stereo datasets and our experiments evidence that learning-to-adapt is, indeed beneficial for online adaptation on vastly different domains.},
+       author = {{Tonioni}, A and {Rahnama}, O and {Joy}, T and
+         {Di Stefano}, L and {Ajanthan}, T and
+         {Torr}, P.H.S},
+        title = "{Learning to Adapt for Stereo}",
+      journal = {CVPR},
+         year = "2019",
+         pdf = {learning_to_adapt.pdf},
+         code = {https://github.com/CVLAB-Unibo/Learning2AdaptForStereo}
+        
+}
+
+@article{joy2020rethinking,
+  abstract={We present an alternative approach to semi-supervision in variational autoencoders(VAEs) that incorporates labels through auxiliary variables rather than directlythrough the latent variables.  Prior work has generally conflated the meaning oflabels, i.e. the associatedcharacteristicsof interest, with the actual label valuesthemselves—learning latent variables that directly correspond to the label values.We argue that to learn meaningful representations, semi-supervision should insteadtry to capture these richer characteristics and that the construction of latent variablesas label values is not just unnecessary, but actively harmful. To this end, we developa novelVAEmodel, thereparameterizedVAE (REVAE), which “reparameterizes”supervision through auxiliary variables and a concomitant variational objective.Through judicious structuring of mappings between latent and auxiliary variables,we show that theREVAEcan effectively learn meaningful representations of data.In particular, we demonstrate that theREVAEis able to match, and even improveon the classification accuracy of previous approaches, but more importantly, it alsoallows for more effective and more general interventions to be performed.  Weinclude a demo of REVAE at https://github.com/thwjoy/revae-demo.}
+  title={Rethinking Semi-Supervised Learning in VAEs},
+  author={Joy, Tom and Schmon, Sebastian M and Torr, Philip HS and Siddharth, N and Rainforth, Tom},
+  journal={arXiv preprint arXiv:2006.10102},
+  year={2020}
+}
+
