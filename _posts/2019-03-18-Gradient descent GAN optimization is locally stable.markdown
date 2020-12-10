@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Gradient descent GAN optimization is locally stable
-date: 2020-03-18 11:12:00-0400
+date: 2019-10-18 11:12:00-0400
 description: Review of the paper Gradient descent GAN optimization is locally stable - NIPS 2017.
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 mathjax: true
 title: Normalising Flows and Invertible Neural Networks
-date: 2019-03-01 11:12:00-0400
+date: 2019-12-01 11:12:00-0400
 description: Overview of normalising flows and inveritble neural networks.
 ---
 
