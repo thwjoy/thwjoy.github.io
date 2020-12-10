@@ -12,4 +12,4 @@ news: true
 social: true
 ---
 
-Tom Joy is a current DPhil student at the University of Oxford and is a member of the [Torr Vision Group](http://www.robots.ox.ac.uk/~tvg/). His current work is focussed on performing semi-supervised learning in generative models [demo](https://github.com/thwjoy/revae-demo). However, he also has undertaken research into normalizing flows and continual learning.
+Tom Joy is a current DPhil student at the University of Oxford and is a member of the [Torr Vision Group](http://www.robots.ox.ac.uk/~tvg/). His current work is focussed on performing semi-supervised learning in generative models [demo](https://github.com/thwjoy/revae-demo). However, he also has undertaken research into normalizing flows, continual learning and optimization of CRFs.
