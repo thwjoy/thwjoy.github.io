@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>Tom Joy | Large Scale GAN Training for High Fidelity Natural Image Synthesis</title>
+  <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+">
+
+  <link rel="shortcut icon" href="/assets/img/favicon.ico">
+
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="canonical" href="/blog/2019/Large-Scale-GAN-Training-for-High-Fidelity-Natural-Image-Synthesis/">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    
+    <span class="site-title">
+        
+        <strong>Tom</strong> Joy
+    </span>
+    
+
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+      <div class="trigger">
+        <!-- About -->
+        <a class="page-link" href="/">about</a>
+
+        <!-- Blog -->
+        <a class="page-link" href="/blog/">blog</a>
+
+        <!-- Pages -->
+        
+          
+        
+          
+        
+          
+        
+          
+            <a class="page-link" href="/projects/">projects</a>
+          
+        
+          
+            <a class="page-link" href="/publications/">publications</a>
+          
+        
+          
+            <a class="page-link" href="/teaching/">teaching</a>
+          
+        
+          
+        
+
+        <!-- CV link -->
+        <!-- <a class="page-link" href="/assets/pdf/CV.pdf">vitae</a> -->
+
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Large Scale GAN Training for High Fidelity Natural Image Synthesis</h1>
+    <p class="post-meta">March 1, 2019</p>
+  </header>
+
+  <article class="post-content">
+    <p>The ability of GANs to scale to high dimensions has remained a notorious hurdle in the compute vision community.
+As such, training a GAN on ImageNet has often remained a single goal in itself, where until recently, the state of the art was initially set by <a href="https://arxiv.org/pdf/1805.08318.pdf">Zhang et al.</a>.
+The seminal work by <a href="https://arxiv.org/pdf/1809.11096.pdf">Brock et al.</a>, showed that the state of the art can be significantly increased by making some small modifications to the architecture and to the training regime.
+They also provide informative insights into the stability of GANs at large scale.
+This blog post will highlight the key contributions by <a href="https://arxiv.org/pdf/1809.11096.pdf">Brock et al.</a> and highlight the key findings in their extensive evaluation.</p>
+
+<h4 id="sa-gan">SA-GAN</h4>
+
+<p>The architecture used seems to follow a throw-the-book at it approach, where almost all components known to improve GAN performance have been used, and it certainly has worked well.
+The baseline architecture used in their work was SA-GAN by <a href="https://arxiv.org/pdf/1805.08318.pdf">Zhang et al.</a>, which uses feature cues from long range connections.
+Thus generating images which contain consisting features across all parts of the image and a high level structural representation.
+This achieved using a self-attention mechanism, where spatial regions from across the image are added to local regions, resulting in information which contains high level context, but also local detail for each feature point.
+<a href="https://arxiv.org/pdf/1809.11096.pdf">Brock et al.</a> introduced class-conditional BatchNorm to the generator and projection to the discriminator, which projects the output of a discriminator onto the embedding of the given class.
+They also make used of Orthogonal Initialisation <a href="https://arxiv.org/pdf/1312.6120.pdf">Saxe et al.</a>, which is known to be an important property in neural networks.
+Perhaps more importantly to the success was the hardware used for training, in some models they made use of 512 cores of a Google TPUv3 Pod, and enabled BatchNorm across all devices, which intuitively should improve generalisation and stability in the training.</p>
+
+<h4 id="batch-size">Batch Size</h4>
+
+<p>The first modification they made was to increase the batch size used in training, which gave a significant improvement in performance, this should be no surprise as a larger batch will cover a wider portion of the training distribution. However, whilst this is a very simple modification to make, it relies on the use of sophisticated and powerful hardware to do the training - whilst everyone can access Google TPUs, it comes at significant expense, which few universities and research centers may be willing to fund.</p>
+
+<h4 id="increasing-parameters">Increasing Parameters</h4>
+
+<p>They also experimented with increasing the dimensions of the architecture, they increased the number of filters by 50%, which gave a slight increase of 21%. They also found that increasing the height of the model didn’t improve performance, one may argue that this is due to the self attention mechanism of SA-GAN already modelling the long range connections, therefore a wider receptive field would be redundant.</p>
+
+<h4 id="sharing-parameters-in-conditional-batchnorm">Sharing Parameters in Conditional BatchNorm</h4>
+
+<p>The conditional BatchNorm uses a large amount of parameters as each layer requires it’s own set embedding. 
+To save memory and computation, they used a shared embedding and projected this onto each layer in the network.
+The introduction of this shared embedding did provide some improvement in the training and a slight decrease in FID and a slight increase in IS, however the model was trained for far fewer iterations, indicating that this lead to early failure in the training.</p>
+
+<h4 id="skip-z-connections">Skip-z Connections</h4>
+
+<p>In an effort to try and utilise the latent space at all levels in the network, they introduced skip-z connections.
+These connections first perform concatenation with either a portion or all of the latent vector and the class conditional vector.
+The concatenated vector is then projected onto the BatchNorm weights.
+Skip-z is only reported to provide a small improvement in performance, suggesting that exposure to the latent representation at each layer is not fundamental to success of a GAN.</p>
+
+<h4 id="truncation-trick">Truncation Trick</h4>
+
+<p>Aside from extensive insights into the performance and stability of GANs, this work also introduced the Truncation Trick, which is simply the re-sampling of the latent space if the probability is below a certain threshold.
+This truncation showed improved results in terms of IS and FID scores, and intuitively this makes sense, as latent spaces with a larger probability are more likely to be sampled and hence undergo more training in that region.
+However, a smaller truncated region leads to better samples but with lower variety.
+They also investigated the use of other latent space distributions, but found a truncated normal to give the best performance.</p>
+
+<p>However, as noted in the paper, larger models tend not to be amenable to truncation, possibly due to full utilisation of the latent space. 
+Conditioning the generator to be smooth is one possible solution to this problem, and in the paper they experiment with Orthogonal Regularisation, which encourages the filters to be orthogonal to one another.
+They experimented with different regularisers (although it’s not clear which ones) and found the following to work the best:</p>
+
+<script type="math/tex; mode=display">\mathcal{R} = ||W^TW \odot (1 - I)||^2_F</script>
+
+<p>This has the primary advantage of encouraging orthogonality in the filters, but unlike previous <a href="/blog/2019/advance_training_GANs/">works</a>, does not constrain the norm to be 1, which is at odds to previous research directions which aim to encourage the norms of the weights to be 1.
+It is also interesting that 60% of the models are amenable to truncation with Orthogonal Regularisation, suggesting that this regularisation is not completely effective for the truncation trick.</p>
+
+<h3 id="analysis">Analysis</h3>
+
+<p>The analysis in this paper is excellent, and leads to some invaluable insights into the training of GANs at large scale.</p>
+
+<h4 id="stability-in-the-generator">Stability in the Generator</h4>
+
+<p>They report that the most informative metrics for pre-empting training collapse is to observe the three largest singular values <script type="math/tex">\sigma_0, \sigma_1, \sigma_2</script> of the early layers in the network. They propose a solution to constrain the singular values to lie within a given range:</p>
+
+<script type="math/tex; mode=display">W = W - \text{max}(0, \sigma_0 - \sigma_{clamp})v_0u_0^T,</script>
+
+<p>Where <script type="math/tex">v_0</script> and <script type="math/tex">u_0</script> are the left and right singular vectors respectively and <script type="math/tex">\sigma_{clamp}</script> is set empirically. They observed that whilst constraining the singular values helped training, it wasn’t sufficient to mitigate training collapse.
+One point that eludes me is that when Spectral Normalisation was employed in the generator, the authors still claim that the above technique helped constrain the singular values, suggesting that the Spectral Normalisation in this setting was ineffective.</p>
+
+<h4 id="stability-in-the-discriminator">Stability in the Discriminator</h4>
+
+<p>Unlike the generator, the singular values of the discriminator weights are noisy, the authors posit that this is to due to drastic periodic changes in %%p_g(x)$$, which in turn causes large gradients to the discriminator.
+To mitigate this, they introduced a zero centered gradient penalty:</p>
+
+<script type="math/tex; mode=display">\mathcal{R} = E_{x ~ p(x)}[(||\nabla_x D(x)||_F^2],</script>
+
+<p>which stabilised training but severely degrades performance, it is not initially clear to me why you would want to constrain the norm of the gradient to be 0, maybe to discourage sharp updates of parameters.
+Similar regularisation stratergies were also employed, but lead to similar conclusions that with a large enough constraint on the weights, stability can be achieved, but at a significant loss in performance.
+Another interesting result is that the later layers of the discriminator contain larger singular values than the early layers.
+This is in contrast to the generator, which indicates that the larger singular values</p>
+
+<h4 id="memorisation-of-the-discriminator">Memorisation of the Discriminator</h4>
+
+<p>The authors also investigated memorisation in the discriminator and found that instead of learning a distribution, it just learnt to overfit to the training data.
+Whilst this does provide enough of a training signal to learn <script type="math/tex">p_g(x)</script>, one would argue that generalizability is an import aspect of deep learning and in this setting the discriminator fails miserably.</p>
+
+  </article>
+
+  
+
+</div>
+
+      </div>
+    </div>
+
+    <footer>
+
+  <div class="wrapper">
+    &copy; Copyright 2020 Tom Joy.
+    Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank">Unsplash</a>.
+
+    
+  </div>
+
+</footer>
+
+
+    <!-- Load jQuery -->
+<script src="//code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<!-- Load Common JS -->
+<script src="/assets/js/common.js"></script>
+
+
+<!--
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+<script src="/assets/js/katex.js"></script>
+-->
+
+
+
+
+
+<!-- Include custom icon fonts -->
+<link rel="stylesheet" href="/assets/css/fontawesome-all.min.css">
+<link rel="stylesheet" href="/assets/css/academicons.min.css">
+
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-XXXXXXXXX', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+
+</html>
