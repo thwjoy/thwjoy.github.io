@@ -12,7 +12,7 @@ paperurl: 'http://thwjoy.github.io/files/dense_crf.pdf'
 	journal = {SIAM J. Imaging Sci.},
 	number = {1},
 	pages = {287--318},
-	title = {{Efficient Relaxations for Dense CRFs with Sparse Higher-Order Potentials}},
+	title = {Efficient Relaxations for Dense CRFs with Sparse Higher-Order Potentials},
 	volume = {12},
 	year = {2019}
 }
