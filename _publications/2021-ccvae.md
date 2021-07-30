@@ -9,7 +9,7 @@ paperurl: 'http://thwjoy.github.io/files/ccvae.pdf'
 ```
 @article{joy2020capturing,
   title={Capturing Label Characteristics in VAEs},
-  author={Joy, Tom and Schmon, Sebastian and Torr, Philip and Siddharth, N and Rainforth, Tom},
+  author={Joy, Tom and Schmon, Sebastian and H.S. Torr, Philip and Siddharth, N and Rainforth, Tom},
   journal={International Conference on Learning Representations},
   year={2020}
 }
