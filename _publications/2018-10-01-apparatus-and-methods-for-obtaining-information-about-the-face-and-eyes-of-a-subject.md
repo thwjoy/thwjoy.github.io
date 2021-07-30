@@ -1,5 +1,5 @@
 ---
-title: "Apparatus and Methods for Obtaining Information about the Face and Eyes of a Subject"
+title: "Patent GB2559977 - Apparatus and Methods for Obtaining Information about the Face and Eyes of a Subject"
 collection: publications
 permalink: /publication/2018-10-01-apparatus-and-methods-for-obtaining-information-about-the-face-and-eyes-of-a-subject
 date: 2018-10-01
