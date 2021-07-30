@@ -2,7 +2,7 @@
 title: "Learning to Adapt for Stereo"
 collection: publications
 permalink: /publication/2019-10-01-adaptive_stereo
-date: 2019-10-01
+date: 2019-11-01
 venue: 'CVPR'
 paperurl: 'http://thwjoy.github.io/files/learning_to_adapt.pdf'
 ---
