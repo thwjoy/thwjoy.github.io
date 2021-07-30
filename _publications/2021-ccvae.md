@@ -2,7 +2,7 @@
 title: "Capturing Label Characteristics in VAEs"
 collection: publications
 permalink: /publication/2021-10-01-ccvae
-date: 2019-10-01
+date: 2021-05-01
 venue: 'ICLR 2021'
 paperurl: 'http://thwjoy.github.io/files/ccvae.pdf'
 ---
