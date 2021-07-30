@@ -2,7 +2,7 @@
 title: "Efficient Relaxations for Dense CRFs with Sparse Higher-Order Potentials"
 collection: publications
 permalink: /publication/2019-10-01-efficient-relaxations-for-dense-crfs-with-sparse-higher-order-potentials
-date: 2019-10-01
+date: 2019-12-01
 venue: 'SIAM J. Imaging Sci. 287--318 Vol 12'
 paperurl: 'http://thwjoy.github.io/files/dense_crf.pdf'
 ---
