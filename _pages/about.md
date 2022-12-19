@@ -8,4 +8,4 @@ redirect_from:
   - /about.html
 ---
 
-This is my personal webpage, you can find relevant information about what I've been up to here. More to come...
+This is my personal webpage, you can find relevant information about what I've been up to here. More to come :)
