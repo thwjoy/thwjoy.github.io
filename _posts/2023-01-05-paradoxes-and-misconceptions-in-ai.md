@@ -1,6 +1,6 @@
 ---
 title: 'Ramblings About AI'
-date: 2023-01-06
+date: 2023-01-05
 permalink: /posts/rambling_ai
 tags:
 - cool posts
