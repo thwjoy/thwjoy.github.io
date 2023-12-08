@@ -10,7 +10,7 @@ locale                   : "en-UK"
 title                    : "Tom Joy"
 title_separator          : "-"
 name                     : &name "Tom Joy"
-description              : &description "Research Scientist at Five AI (BOSCH)"
+description              : &description "Research Scientist at Five AI (BOSCH), Co-founder of GirlsWhoML, Previous Torr vision group PhD student"
 url                      : https://thwjoy.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "thwjoy/thwjoy.github.io"
@@ -82,7 +82,7 @@ analytics:
 author:
   name             : "Tom Joy"
   avatar           : "brain.jpg"
-  bio              : "Research Scientist at Five AI (BOSCH)"
+  bio              : "Research Scientist at Five AI (BOSCH), Co-founder of GirlsWhoML, Previous Torr vision group PhD student"
   location         : "London"
   employer         :
   pubmed           : 
