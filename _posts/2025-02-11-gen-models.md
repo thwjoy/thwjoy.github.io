@@ -33,7 +33,7 @@ Steps to fit a normal distribution to data:
    where $p(x_i; \mu, \sigma^2)$ is the probability of the $i$-th data point under the normal distribution with parameters $\mu$ and $\sigma^2$. This is very similar to the loss function we use in classification, except here we are fitting a distribution rather than a classifier.
 
 <div style="text-align: center;">
-    <img src="images/blogs/gen-models-gaussian-heights.png" alt="Fitting a Gaussian Distribution to Heights" width="50%">
+    <img src="https://thwjoy.github.io/images/blogs/gen-models-gaussian-heights.png" alt="Fitting a Gaussian Distribution to Heights" width="50%">
 </div>
 
 In this section, we visualize the process of fitting a Gaussian distribution to a dataset of heights. The goal is to estimate the mean ($\mu$) and standard deviation ($\sigma$) of the heights in the population. 
